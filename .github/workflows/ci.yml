@@ -17,6 +17,17 @@ jobs:
         with:
           release: latest
 
+      # Restore the build tool's cache folder so up-to-date tasks are
+      # skipped. Caches are immutable, so save under a unique key each run
+      # and restore the most recent one by prefix.
+      - name: Cache MATLAB build results
+        uses: actions/cache@v4
+        with:
+          path: .buildtool
+          key: matlab-buildtool-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            matlab-buildtool-${{ runner.os }}-
+
       - name: Run MATLAB build
         uses: matlab-actions/run-build@v3
         with:
